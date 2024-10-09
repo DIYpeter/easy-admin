@@ -1,0 +1,31 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: easy-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/easy-admin
+    username: root
+    password: 123456
+    hikari:
+      #连接池名
+      pool-name: HikariCP
+
+# mybatis-flex
+mybatis-flex:
+  global-config:
+    # 主键配置
+    key-config:
+      # 内置主键生成器
+      key-type: generator
+      # 雪花算法生成
+      value: snowFlakeId
+    # 因为系统默认值和业务默认值一致，理论可以不配置删除字段相关配置，但是为了显性展示，所以这里增加了这些“多余”的配置
+    # 全局默认删除字段 默认值 del_flag
+    logic-delete-column: del_flag
+    # 删除  默认值 1
+    deleted-value-of-logic-delete: 1
+    # 未删除 默认值 0
+    normal-value-of-logic-delete: 0

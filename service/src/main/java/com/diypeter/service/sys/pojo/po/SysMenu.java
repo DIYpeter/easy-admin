@@ -18,7 +18,7 @@ public class SysMenu {
     /**
      * 父级id
      */
-    private String pId;
+    private String pid;
     /**
      * 菜单标题
      */

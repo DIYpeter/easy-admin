@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,7 +81,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     private List<SysMenuListDto> buildMenuTree(List<SysMenu> menuList, String pId) {
 
         // 获取当前层节点
-        List<SysMenu> sysMenus = menuList.stream().filter(f -> f.getPId().equals(pId)).toList();
+        List<SysMenu> sysMenus = menuList.stream().filter(f -> f.getPid().equals(pId)).toList();
 
         List<SysMenuListDto> r = new ArrayList<>();
         // 组装数据 循环调用 下钻数据
@@ -107,7 +106,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
         List<SysMenu> list = list(
                 QueryWrapper.create()
-                        .where(SYS_MENU.P_ID.eq(id))
+                        .where(SYS_MENU.PID.eq(id))
         );
         if (CollectionUtil.isEmpty(list)) {
             return list;

@@ -1,5 +1,6 @@
 package com.diypeter.service.sys.pojo.dto.sysmenu;
 
+import com.diypeter.framework.enums.BooleanCode;
 import com.diypeter.framework.enums.MenuTypeCode;
 import com.diypeter.framework.validator.InEnumValue;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +16,7 @@ public class SysMenuAddDto {
      * 父级id
      */
     @NotBlank(message = "请选择父级菜单")
-    private String pId = "0";
+    private String pid;
     /**
      * 菜单标题
      */
@@ -49,6 +50,7 @@ public class SysMenuAddDto {
      * 前端是否隐藏菜单
      */
     @NotBlank(message = "请选择前端是否隐藏菜单")
+    @InEnumValue(enumClass = BooleanCode.class, message = "前端是否隐藏菜单参数不合法")
     private String hideFlag;
     /**
      * 前端需要高亮的菜单 菜单的path
@@ -58,16 +60,19 @@ public class SysMenuAddDto {
      * 前端是否全屏
      */
     @NotBlank(message = "请选择前端是否全屏")
+    @InEnumValue(enumClass = BooleanCode.class, message = "前端是否全屏参数不合法")
     private String fullFlag;
     /**
      * 前端是否固定在标签页中
      */
     @NotBlank(message = "请选择前端是否固定在标签页中")
+    @InEnumValue(enumClass = BooleanCode.class, message = "前端是否固定在标签页中参数不合法")
     private String affixFlag;
     /**
      * 前端路由是否需要缓存
      */
     @NotBlank(message = "请选择前端路由是否需要缓存")
+    @InEnumValue(enumClass = BooleanCode.class, message = "前端路由是否需要缓存参数不合法")
     private String keepAliveFlag;
     /**
      * 排序
@@ -76,7 +81,7 @@ public class SysMenuAddDto {
     /**
      * 菜单类型
      */
-    @InEnumValue(enumClass = MenuTypeCode.class,message = "不支持的菜单类型")
+    @InEnumValue(enumClass = MenuTypeCode.class, message = "不支持的菜单类型")
     @NotBlank(message = "请选择菜单类型")
     private String menuTypeCd;
     /**

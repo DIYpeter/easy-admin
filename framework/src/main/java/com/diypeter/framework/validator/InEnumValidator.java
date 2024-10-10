@@ -23,6 +23,10 @@ public class InEnumValidator implements ConstraintValidator<InEnumValue, Object>
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
+        // 判断当前入参是否有值，如果没有则直接返回校验成功。只有有值的情况才去校验。入参为空的情况交给 字符串验证去判断
+        if (null == value) {
+            return true;
+        }
 
         // 判断当前枚举是否支持校验功能
         boolean assignableFrom = InEnum.class.isAssignableFrom(enumClass);

@@ -19,8 +19,7 @@ public class SysMenuListDto {
     /**
      * 父级id
      */
-    @JsonProperty(value = "pId")
-    private String pId;
+    private String pid;
     /**
      * 菜单标题
      */

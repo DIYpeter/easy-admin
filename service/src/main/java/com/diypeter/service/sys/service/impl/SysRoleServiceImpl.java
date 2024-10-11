@@ -3,19 +3,31 @@ package com.diypeter.service.sys.service.impl;
 import com.diypeter.framework.entity.PageR;
 import com.diypeter.framework.exception.BusinessException;
 import com.diypeter.service.sys.mapper.SysRoleMapper;
+import com.diypeter.service.sys.mapper.SysRoleMenuMapper;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleDeleteDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleEditDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleMenuListDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleQueryMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleSelectDto;
 import com.diypeter.service.sys.pojo.po.SysRole;
+import com.diypeter.service.sys.pojo.po.SysRoleMenu;
 import com.diypeter.service.sys.service.SysRoleService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.If;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
+
+import static com.diypeter.service.sys.pojo.po.table.SysRoleMenuTableDef.SYS_ROLE_MENU;
 import static com.diypeter.service.sys.pojo.po.table.SysRoleTableDef.SYS_ROLE;
 
 /**
@@ -24,7 +36,10 @@ import static com.diypeter.service.sys.pojo.po.table.SysRoleTableDef.SYS_ROLE;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> implements SysRoleService {
+
+    private final SysRoleMenuMapper sysRoleMenuMapper;
 
     @Override
     public PageR<SysRole> pageList(SysRoleSelectDto sysRoleSelectDto) {
@@ -45,6 +60,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addSysRole(SysRoleAddDto sysRoleAddDto) {
 
         // roleName是否重复
@@ -69,6 +85,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean editSysRole(SysRoleEditDto sysRoleEditDto) {
 
         // roleName是否重复
@@ -94,7 +111,74 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean deleteSysRole(SysRoleDeleteDto sysRoleDeleteDto) {
         return removeByIds(sysRoleDeleteDto.getIds());
     }
+
+    // ****************** 角色-菜单 关联 开始*********************************************
+
+    /**
+     * 查询可配置的权限和拥有的权限
+     *
+     * @param sysRoleQueryMenuButtonDto
+     * @return
+     */
+    @Override
+    public SysRoleMenuListDto queryMenuButton(SysRoleQueryMenuButtonDto sysRoleQueryMenuButtonDto) {
+
+        // 获取当前角色拥有的权限
+        List<SysRoleMenu> sysRoleMenus = sysRoleMenuMapper.selectListByQuery(
+                QueryWrapper.create()
+                        .where(SYS_ROLE_MENU.ROLE_ID.eq(sysRoleQueryMenuButtonDto.getId()))
+        );
+        // 组合成列表返回
+        List<String> menuIdList = sysRoleMenus.stream().map(SysRoleMenu::getMenuId).toList();
+
+        SysRoleMenuListDto dto = new SysRoleMenuListDto();
+        dto.setId(sysRoleQueryMenuButtonDto.getId());
+        dto.setMenuId(menuIdList);
+
+        return dto;
+    }
+
+    /**
+     * 给角色赋予菜单和按钮权限
+     *
+     * @param sysRoleAddMenuButtonDto
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean addMenuButton(SysRoleAddMenuButtonDto sysRoleAddMenuButtonDto) {
+
+        // 删除历史关联关系
+        sysRoleMenuMapper.deleteByQuery(
+                QueryWrapper.create()
+                        .where(SYS_ROLE_MENU.ROLE_ID.eq(sysRoleAddMenuButtonDto.getId()))
+        );
+
+        // 增加关联关系
+        List<SysRoleMenu> list = sysRoleAddMenuButtonDto.getMenuIds().stream()
+                .filter(StringUtils::hasText)
+                .map(d -> {
+                    SysRoleMenu sysRoleMenu = new SysRoleMenu();
+                    sysRoleMenu.setRoleId(sysRoleAddMenuButtonDto.getId());
+                    sysRoleMenu.setMenuId(d);
+                    return sysRoleMenu;
+                })
+                .toList();
+
+        if (CollectionUtils.isEmpty(list)) {
+            throw new BusinessException(999, "未选择要添加的权限");
+        }
+
+        sysRoleMenuMapper.insertBatch(list);
+
+        // todo 刷新用户的角色权限
+
+        return true;
+    }
+    // ****************** 角色-菜单 关联 结束 *********************************************
+
 }

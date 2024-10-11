@@ -3,8 +3,11 @@ package com.diypeter.service.sys.controller;
 import com.diypeter.framework.entity.PageR;
 import com.diypeter.framework.entity.R;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleDeleteDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleEditDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleMenuListDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleQueryMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleSelectDto;
 import com.diypeter.service.sys.pojo.po.SysRole;
 import com.diypeter.service.sys.service.SysRoleService;
@@ -50,6 +53,24 @@ public class SysRoleController {
     @PostMapping("/delete")
     public R<Boolean> delete(@Validated @RequestBody SysRoleDeleteDto sysRoleDeleteDto) {
         Boolean r = sysRoleService.deleteSysRole(sysRoleDeleteDto);
+        return R.ok(r);
+    }
+
+    /**
+     * 查询角色的权限信息
+     */
+    @GetMapping("/query-menu-button")
+    public R<SysRoleMenuListDto> queryMenuButton(@Validated SysRoleQueryMenuButtonDto sysRoleQueryMenuButtonDto) {
+        SysRoleMenuListDto r = sysRoleService.queryMenuButton(sysRoleQueryMenuButtonDto);
+        return R.ok(r);
+    }
+
+    /**
+     * 给角色添加权限
+     */
+    @PostMapping("/add-menu-button")
+    public R<Boolean> addMenuButton(@Validated @RequestBody SysRoleAddMenuButtonDto sysRoleAddMenuButtonDto) {
+        Boolean r = sysRoleService.addMenuButton(sysRoleAddMenuButtonDto);
         return R.ok(r);
     }
 

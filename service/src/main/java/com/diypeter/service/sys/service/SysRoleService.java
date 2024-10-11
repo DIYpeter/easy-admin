@@ -2,8 +2,11 @@ package com.diypeter.service.sys.service;
 
 import com.diypeter.framework.entity.PageR;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleAddMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleDeleteDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleEditDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleMenuListDto;
+import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleQueryMenuButtonDto;
 import com.diypeter.service.sys.pojo.dto.sysrole.SysRoleSelectDto;
 import com.diypeter.service.sys.pojo.po.SysRole;
 import com.mybatisflex.core.service.IService;
@@ -45,4 +48,20 @@ public interface SysRoleService extends IService<SysRole> {
      * @return
      */
     Boolean deleteSysRole(SysRoleDeleteDto sysRoleDeleteDto);
+
+    /**
+     * 查询可配置的权限和拥有的权限
+     *
+     * @param sysRoleQueryMenuButtonDto
+     * @return
+     */
+    SysRoleMenuListDto queryMenuButton(SysRoleQueryMenuButtonDto sysRoleQueryMenuButtonDto);
+
+    /**
+     * 给角色赋予菜单和按钮权限
+     *
+     * @param sysRoleAddMenuButtonDto
+     * @return
+     */
+    Boolean addMenuButton(SysRoleAddMenuButtonDto sysRoleAddMenuButtonDto);
 }

@@ -1,8 +1,5 @@
 package com.diypeter.service.sys.pojo.dto.sysmenu;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mybatisflex.annotation.Id;
 import lombok.Data;
 
 import java.util.List;

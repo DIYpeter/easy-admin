@@ -40,6 +40,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addSysMenu(SysMenuAddDto sysMenuAddDto) {
 
         SysMenu sysMenu = SysMenuMapStruct.INSTANCE.sysMenuAddDtoToSysMenu(sysMenuAddDto);
@@ -54,6 +55,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean editSysMenu(SysMenuEditDto sysMenuEditDto) {
 
         SysMenu sysMenu = SysMenuMapStruct.INSTANCE.sysMenuEditDtoToSysMenu(sysMenuEditDto);

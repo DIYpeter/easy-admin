@@ -3,8 +3,11 @@ package com.diypeter.service.sys.controller;
 import com.diypeter.framework.entity.PageR;
 import com.diypeter.framework.entity.R;
 import com.diypeter.service.sys.pojo.dto.sysuser.SysUserAddDto;
+import com.diypeter.service.sys.pojo.dto.sysuser.SysUserAddUserRoleDto;
 import com.diypeter.service.sys.pojo.dto.sysuser.SysUserDeleteDto;
 import com.diypeter.service.sys.pojo.dto.sysuser.SysUserEditDto;
+import com.diypeter.service.sys.pojo.dto.sysuser.SysUserQueryUserRoleDto;
+import com.diypeter.service.sys.pojo.dto.sysuser.SysUserRoleListDto;
 import com.diypeter.service.sys.pojo.dto.sysuser.SysUserSelectDto;
 import com.diypeter.service.sys.pojo.po.SysUser;
 import com.diypeter.service.sys.service.SysUserService;
@@ -49,6 +52,25 @@ public class SysUserController {
     @PostMapping("/delete")
     public R<Boolean> delete(@Validated @RequestBody SysUserDeleteDto sysUserDeleteDto) {
         Boolean r = sysUserService.deleteSysUser(sysUserDeleteDto);
+        return R.ok(r);
+    }
+
+    /**
+     * 查询当前用户拥有的角色
+     */
+    @GetMapping("/queryUserRole")
+    public R<SysUserRoleListDto> queryUserRole(@Validated SysUserQueryUserRoleDto sysUserQueryUserRoleDto) {
+        SysUserRoleListDto r = sysUserService.queryUserRole(sysUserQueryUserRoleDto);
+        return R.ok(r);
+
+    }
+
+
+    /**
+     * 为用户添加角色
+     */
+    public R<Boolean> addUserRole(@Validated @RequestBody SysUserAddUserRoleDto sysUserAddUserRoleDto) {
+        Boolean r = sysUserService.addUserRole(sysUserAddUserRoleDto);
         return R.ok(r);
     }
 
